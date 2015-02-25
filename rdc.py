@@ -1,7 +1,7 @@
 ##<Akshay Jha>
 ##<akshayjha@live.in>
 
-##<www.github.com/axayjha>
+##<https://github.com/axayjha?tab=repositories>
 ##<www.akshayjha.co.nr>
 
 ##--------------------------------------------------------------------------------------------------
@@ -197,10 +197,3 @@ print("-----------------------------------------------------------------")
 
 print("")
 input("Press <ENTER> to exit")
-
-
-
-##interestAmount=roundto5p(((rate[a]/100)*deduction[a]*(months*(months+1)/2)/12)) 
-
-
-
