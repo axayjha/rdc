@@ -1,10 +1,12 @@
-<- Recurring Deposit Calculator [RDC] ->
+RECURRING DEPOSIT CALCULATOR - RDC
+-----------------------------------
 
-Little python script to calculate interest on recurring deposits.
+Little python script coded in Python 3.4 
+to calculate interest on recurring deposits and make a data chart.
 Its still in its initial phase development and rather buggy.
 
 COMPILING / INSTALLING / RUNNING 
----------------------------------
+-----------------------------------
 
 No need to compile, no need to install!
 
@@ -15,3 +17,4 @@ which can run without python installed on your system!
 I would suggest you to install python and then run the .py file which provides more flexibility.
 
 
+<akshayjha@live.in>
