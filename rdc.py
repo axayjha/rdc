@@ -1,35 +1,31 @@
 ##<Akshay Jha>
 ##<akshayjha@live.in>
 
-##<https://github.com/axayjha?tab=repositories>
+##<www.github.com/axayjha>
 ##<www.akshayjha.co.nr>
 
 ##--------------------------------------------------------------------------------------------------
-##------------------------------------------HEADER--------------------------------------------------
 
-print("+--------------------------------------------------+")
-print("|                                                  |")
-print("|                                                  |")
-print("|         Recurring Deposit Calculator             |")
-print("|         & automatic chart creater                |")
-print("|                 Version 0.2                      |")
-print("|                                                  |")
-print("|                                                  |")
-print("|                                          //Akshay|")
-print("+--------------------------------------------------+")
-print("")
+print("""
+         +--------------------------------------------------+
+         |                                                  |
+         |                                                  |
+         |         Recurring Deposit Calculator             |
+         |         & automatic chart creater                |
+         |                 Version 0.3                      |
+         |                                                  |
+         |                                                  |
+         |                                          //Akshay|
+         +--------------------------------------------------+ 
+
+         """)
 
 
-##--------------------------------------------------------------------------------------------------
-## Initialization of all the lists to store the data for different blocks
-## One of the lists, named 'total' is initialized on around 100th line of the code for technical reasons
+year=[]
+rate=[]
+contribution=[] 
 
-year=[] ## List containing the time intervals for all the blocks in MMYYYYmmyyyy format. eg. 012015092015 for 01/2015-09/2015
-rate=[] ## List containing the interest rates for all the blocks
-contribution=[] ## List containing the contribution amount for all the blocks
 
-##---------------------------------------------------------------------------------------------
-##Gets Name
 name=''
 while name=='':
         name=str(input("Enter name of the client: "))
@@ -38,8 +34,7 @@ while name=='':
                 print("Invalid response. Try again.")
                 print("")
 
-##-------------------------------------------------------------------------------------------------
-## Looping constructs used to get all the necessary inputs required to do the calculations
+
 
 inp='2'
 while inp!="1" or inp=="":
@@ -104,9 +99,6 @@ while inp!="1" or inp=="":
 
 total=[contribution[0], ]   
 
-##-------------------------------------------------------------------------------------------------
-## months(MMYYYYmmyyyy): Function to find the number of months between MM/YYYY and mm/yyyy
-## yearint = MMYYYYmmyyyyy
 
 def months(yearint):
 
@@ -129,12 +121,8 @@ def months(yearint):
 
         return month
 
-##--------------------------------------------------------------------------------------------------
-## roundto5p(x) : Takes any number x and rounds it off to the nearest multiple of 0.05
-## Used here to round off an amount Rs. x to the nearest multiple of 5 paise
-## for example, Rs4.33 will be rounded off to Rs4.35 and Rs4.32 to Rs4.30
 
-def roundto5p(x):           ##Rounds off the amount(x) to the nearest multiple of 5 paise(0.05 Rupees)
+def roundto5p(x):           
 	if type(x)==float:
 		if round(round(x,2)%0.05, 2)<0.03:
 			z=x-round(round(x,2)%0.05, 2)
@@ -147,29 +135,22 @@ def roundto5p(x):           ##Rounds off the amount(x) to the nearest multiple o
 		raise TypeError ("Enter a valid number in parenthesis")
 
 
-##--------------------------------------------------------------------------------------------------
-## The most importain function, the main() function of this script, so to say.
-##
-## Let me explain the arguments it takes:
-## pAmount : Principle amount - The contribution per month of the client for a particular block
-## nAmount : Total amount at the end of the previous block including interests (equal to pAmount for the very first block)
-## rate    : Interest rate per annum
-## month   : Total number of months for one block
-##
-## This function returns the total balance including interests of a client
+
+global monthlyTotal
+monthlyTotal=[]
 
 def returnValue(pAmount, nAmount, rate, month):  
         loop=0
-                
+        global  monthlyTotal       
         while loop<(month):
-                amount=nAmount
                 if loop>0:
-                        amount=summ + pAmount   
-                summ=amount + roundto5p(amount*rate/1200)                             
+                        nAmount=nAmount + pAmount
+                nAmount=roundto5p(nAmount + (nAmount*rate/1200))
+                monthlyTotal.append(nAmount)             
+                
                 loop=loop+1
-        return roundto5p(summ)
+        return (nAmount)
 
-##--------------------------------------------------------------------------------------------------
 
 i=0
 
@@ -177,23 +158,102 @@ while i<len(year):
 	total.append(returnValue(contribution[i], total[i], rate[i], months(year[i])))
 	i=i+1
 
-##--------------------------------------------------------------------------------------------------
-## Created chart       
+
+yearsRaw=[]
+for c in range(len(year)):
+	yearsRaw.append(str(year[c][0:2])+"/"+str(year[c][2:6])+"-"+str(year[c][6:8])+"/"+str(year[c][8:12]) )
+
+
+contRaw=[]
+for c in range(len(contribution)):
+	contRaw.append(str(contribution[c]))
+
+rateRaw=[]
+for c in range(len(rate)):
+	rateRaw.append(str(rate[c]))
+
+totRaw=[]
+for c in range(len(total)):
+	totRaw.append(str(total[c]))
+
+intRaw=[]
+for c in range(len(contribution)):
+        intRaw.append(str(roundto5p(total[c+1]-(months(year[c])*contribution[c]))))
+
+dataRaw=[]
+
+dataRaw.append(yearsRaw)
+dataRaw.append(contRaw)
+dataRaw.append(rateRaw)
+dataRaw.append(totRaw)
+dataRaw.append(intRaw)
+
+
+
+data=""""""
+for i in range(len(dataRaw[0])):
+	data=data+"""<tr><td>"""+str(dataRaw[0][i])+"""</td><td>"""+str(dataRaw[1][i])+"""</td>
+	<td>"""+str(dataRaw[2][i])+"""</td><td>"""+str(dataRaw[4][i])+"""</td><td>"""+str(dataRaw[3][i+1])+"""</td></tr>""" 
+
+monthly=""""""
+for j in range(len(monthlyTotal)):
+    monthly=monthly+"""<tr><td>"""+str(j+1)+"""</td><td>"""+str(monthlyTotal[j])+"""</td></tr>"""
+
+try:
+        cfile=open('C:/rdc/table.htm', 'w')
+except FileNotFoundError: 
+        cfile=open('C:/rdc-master/table.htm', 'w')
+
+cfile.writelines("""
+	<!doctype html>
+	<html lang='en'>
+	<head>
+	      <meta charset="utf-8">
+	      <title>Data Chart for """+name+"""</title>
+          <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	      <img src="img/1.jpg">
+	      <img src="img/2.jpg">
+	      <h1 style="font-family:courier new; color:grey"><small>Data chart for """+name+""" </small></h1>
+	      <hr>
+	</head>
+
+	<body style="background-color:lightblue">
+
+	<table border="2" style="font-family:courier new; color:blue">
+	<tr>
+	<th>Year</th>
+	<th>Amount</th>
+	<th>Rate</th>
+    <th>Interest</th>
+	<th>Total</th>
+	</tr>
+	
+	"""+data+"""
+
+	</table>
+    <hr>
+    <p></p>
+    <h3 style="font-family:cambria">Month wise chart</h3>
+    <hr>
+    <table border="2" style="font-family:courier new; color:black">
+    <tr>
+    <th>Month number</th>
+    <th>Amount at the end of the month</th>
+    </tr>
+    """+monthly+"""
+    </table>
+	</body>
+	<footer>
+		<p></p>
+		<hr>	
+		<p style="font-family:consolas; color:darkblue"><small>//AXAY</small></p>	
+	</footer>
+	</html> """)
+
+cfile.close()
 
 print("")
-print("Data chart for " + name)
-print("-----------------------------------------------------------------")
-print("## |      Year       |Amount| Rate | Interest |  Total  |")
-
-
-c=0
-while c<len(year):
-	print(" "+str(c+1) +" | "+str(year[c][0:2])+"/"+str(year[c][2:6])+"-"+str(year[c][6:8])+"/"+str(year[c][8:12]) + " | "+str(contribution[c]) +" | "+str(rate[c])+" | "+str(roundto5p(total[c+1]-(months(year[c])*contribution[c])))+" | "+str(total[c+1])+" | ")
-	c=c+1
-
-
-
-print("-----------------------------------------------------------------")
-
+print("Done! Chart Created. Open 'table.htm' file to see the result")
 print("")
 input("Press <ENTER> to exit")
+raise SystemExit
